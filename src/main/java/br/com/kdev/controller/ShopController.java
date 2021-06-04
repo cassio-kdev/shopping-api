@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.kdev.dto.ShopDTO;
+import br.com.kdev.dto.UserDTO;
 import br.com.kdev.model.dto.ShopReportDTO;
 import br.com.kdev.service.ReportService;
 import br.com.kdev.service.ShopService;
+import br.com.kdev.service.UserService;
 import br.com.kdev.util.Utils;
 
 @RestController
@@ -25,6 +27,9 @@ public class ShopController {
 
 	@Autowired
 	private ShopService shopService;
+	
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	private ReportService reportService;
@@ -81,6 +86,11 @@ public class ShopController {
 			@RequestParam(name = "dataFim", required = true) @DateTimeFormat(pattern = "dd/MM/yyyy") Date dataFim) {
 
 		return reportService.getReportByDate(dataInicio, dataFim);
+	}
+	
+	@GetMapping("/shopping/user/{id}")
+	public UserDTO findByUsuario(@PathVariable String id) {
+		return userService.getUserByCpf(id);
 	}
 
 }
