@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.kdev.model.Shop;
 
-public interface ShopRepository extends JpaRepository<Shop, Long> {
+public interface ShopRepository extends JpaRepository<Shop, Long>, ReportRepository {
 	public List<Shop> findAllByUserIdentifier(String userIdentifier);
 
 	public List<Shop> findAllByTotalGreaterThan(Float total);
