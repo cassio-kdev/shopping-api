@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.kdev.dto.ItemDTO;
+import br.com.kdev.dto.ProductDTO;
 import br.com.kdev.dto.ShopDTO;
 import br.com.kdev.model.Shop;
 import br.com.kdev.model.dto.DTOConverter;
@@ -18,6 +20,10 @@ public class ShopService {
 
 	@Autowired
 	private ShopRepository shopRepository;
+	@Autowired
+	private ProductService productService;
+	@Autowired
+	private UserService userService;
 
 	public List<ShopDTO> getAll() {
 		List<Shop> shops = shopRepository.findAll();
@@ -43,6 +49,13 @@ public class ShopService {
 	}
 
 	public ShopDTO save(ShopDTO shopDTO) {
+		if (userService.getUserByCpf(shopDTO.getUserIdentifier()) == null) {
+			return null;
+		}
+		if (!validateProducts(shopDTO.getItems())) {
+			return null;
+		}
+
 		shopDTO.setTotal(shopDTO.getItems().stream().map(x -> x.getPrice()).reduce((float) 0, Float::sum));
 		Shop shop = Shop.convert(shopDTO);
 		shop.setDate(new Date());
@@ -50,4 +63,14 @@ public class ShopService {
 		return DTOConverter.convert(shop);
 	}
 
+	private boolean validateProducts(List<ItemDTO> items) {
+		for (ItemDTO item : items) {
+			ProductDTO productDTO = productService.getProductByIdentifier(item.getProductIdentifier());
+			if (productDTO == null) {
+				return false;
+			}
+			item.setPrice(productDTO.getPreco());
+		}
+		return true;
+	}
 }
