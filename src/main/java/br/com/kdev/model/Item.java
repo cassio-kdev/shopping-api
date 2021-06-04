@@ -2,7 +2,7 @@ package br.com.kdev.model;
 
 import javax.persistence.Embeddable;
 
-import br.com.kdev.model.dto.ItemDTO;
+import br.com.kdev.dto.ItemDTO;
 
 @Embeddable
 public class Item {

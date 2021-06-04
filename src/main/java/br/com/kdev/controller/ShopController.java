@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.kdev.model.dto.ShopDTO;
+import br.com.kdev.dto.ShopDTO;
 import br.com.kdev.model.dto.ShopReportDTO;
 import br.com.kdev.service.ReportService;
 import br.com.kdev.service.ShopService;

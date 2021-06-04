@@ -13,7 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 
-import br.com.kdev.model.dto.ShopDTO;
+import br.com.kdev.dto.ShopDTO;
 
 @Entity(name = "shop")
 public class Shop {

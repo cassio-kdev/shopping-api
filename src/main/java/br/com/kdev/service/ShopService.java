@@ -8,8 +8,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.kdev.dto.ShopDTO;
 import br.com.kdev.model.Shop;
-import br.com.kdev.model.dto.ShopDTO;
+import br.com.kdev.model.dto.DTOConverter;
 import br.com.kdev.repository.ShopRepository;
 
 @Service
@@ -20,23 +21,23 @@ public class ShopService {
 
 	public List<ShopDTO> getAll() {
 		List<Shop> shops = shopRepository.findAll();
-		return shops.stream().map(ShopDTO::convert).collect(Collectors.toList());
+		return shops.stream().map(DTOConverter::convert).collect(Collectors.toList());
 	}
 
 	public List<ShopDTO> getByUser(String userIdentifier) {
 		List<Shop> shops = shopRepository.findAllByUserIdentifier(userIdentifier);
-		return shops.stream().map(ShopDTO::convert).collect(Collectors.toList());
+		return shops.stream().map(DTOConverter::convert).collect(Collectors.toList());
 	}
 
 	public List<ShopDTO> getByDate(ShopDTO shopDTO) {
 		List<Shop> shops = shopRepository.findAllByDateGreaterThan(shopDTO.getDate());
-		return shops.stream().map(ShopDTO::convert).collect(Collectors.toList());
+		return shops.stream().map(DTOConverter::convert).collect(Collectors.toList());
 	}
 
 	public ShopDTO findById(long ProductId) {
 		Optional<Shop> shop = shopRepository.findById(ProductId);
 		if (shop.isPresent()) {
-			return ShopDTO.convert(shop.get());
+			return DTOConverter.convert(shop.get());
 		}
 		return null;
 	}
@@ -46,7 +47,7 @@ public class ShopService {
 		Shop shop = Shop.convert(shopDTO);
 		shop.setDate(new Date());
 		shop = shopRepository.save(shop);
-		return ShopDTO.convert(shop);
+		return DTOConverter.convert(shop);
 	}
 
 }
