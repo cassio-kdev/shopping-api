@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.kdev.dto.ShopDTO;
-import br.com.kdev.dto.UserDTO;
 import br.com.kdev.model.dto.ShopReportDTO;
 import br.com.kdev.service.ReportService;
 import br.com.kdev.service.ShopService;
@@ -27,7 +27,7 @@ public class ShopController {
 
 	@Autowired
 	private ShopService shopService;
-	
+
 	@Autowired
 	private UserService userService;
 
@@ -60,9 +60,10 @@ public class ShopController {
 	}
 
 	@PostMapping("/shopping")
-	public ShopDTO newShop(@Valid @RequestBody ShopDTO shopDTO) {
+	public ShopDTO newShop(@RequestHeader(name = "key", required = true) String key,
+			@Valid @RequestBody ShopDTO shopDTO) {
 
-		return shopService.save(shopDTO);
+		return shopService.save(shopDTO, key);
 	}
 
 	@GetMapping("/shopping/search")
@@ -70,13 +71,13 @@ public class ShopController {
 			@RequestParam(name = "dataInicio", required = true) @DateTimeFormat(pattern = "dd/MM/yyyy") Date dataInicio,
 			@RequestParam(name = "dataFim", required = false) @DateTimeFormat(pattern = "dd/MM/yyyy") Date dataFim,
 			@RequestParam(name = "valorMinimo", required = false) Float valorMinimo) {
-		System.out.println("Inicio: "+ dataInicio+"\nFim: " +dataFim);
-		
+		System.out.println("Inicio: " + dataInicio + "\nFim: " + dataFim);
+
 		Date formatDataDBInicio = Utils.formatDataDB(dataInicio);
 		Date formatDataDBFim = Utils.formatDataDB(dataFim);
-		
-		System.out.println("Inicio: "+ formatDataDBInicio+"\nFim: " +formatDataDBFim);
-		
+
+		System.out.println("Inicio: " + formatDataDBInicio + "\nFim: " + formatDataDBFim);
+
 		return reportService.getShopsByFilter(formatDataDBInicio, formatDataDBFim, valorMinimo);
 	}
 
@@ -86,11 +87,6 @@ public class ShopController {
 			@RequestParam(name = "dataFim", required = true) @DateTimeFormat(pattern = "dd/MM/yyyy") Date dataFim) {
 
 		return reportService.getReportByDate(dataInicio, dataFim);
-	}
-	
-	@GetMapping("/shopping/user/{id}")
-	public UserDTO findByUsuario(@PathVariable String id) {
-		return userService.getUserByCpf(id);
 	}
 
 }
